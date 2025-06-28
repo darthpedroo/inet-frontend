@@ -6,8 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Hotel, MapPin, Calendar, Users, Star, Wifi, Car, Coffee } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import ShoppingCartComponent from "@/components/ShoppingCart";
+import AuthComponent from "@/components/AuthComponent";
 
 const Hotels = () => {
+  const { addToCart } = useCart();
   const [searchData, setSearchData] = useState({
     destination: "",
     checkin: "",
@@ -17,7 +21,7 @@ const Hotels = () => {
 
   const hotels = [
     {
-      id: 1,
+      id: "hotel-1",
       name: "Grand Plaza Hotel",
       location: "Downtown, New York",
       rating: 4.8,
@@ -28,7 +32,7 @@ const Hotels = () => {
       description: "Luxury hotel in the heart of the city"
     },
     {
-      id: 2,
+      id: "hotel-2",
       name: "Sunset Beach Resort",
       location: "Beachfront, Miami",
       rating: 4.6,
@@ -39,7 +43,7 @@ const Hotels = () => {
       description: "Oceanfront resort with stunning views"
     },
     {
-      id: 3,
+      id: "hotel-3",
       name: "Mountain Lodge",
       location: "Alpine District, Colorado",
       rating: 4.9,
@@ -50,6 +54,22 @@ const Hotels = () => {
       description: "Cozy lodge with mountain adventures"
     }
   ];
+
+  const handleAddToCart = (hotel: any) => {
+    addToCart({
+      id: hotel.id,
+      name: hotel.name,
+      price: hotel.price,
+      type: 'HOTEL',
+      image: hotel.image,
+      description: hotel.description,
+      details: {
+        location: hotel.location,
+        rating: hotel.rating,
+        amenities: hotel.amenities
+      }
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -69,6 +89,10 @@ const Hotels = () => {
               <a href="/hotels" className="text-green-600 font-medium">Hotels</a>
               <a href="/transport" className="text-gray-600 hover:text-gray-900">Transport</a>
               <a href="/experiences" className="text-gray-600 hover:text-gray-900">Experiences</a>
+              <div className="flex items-center space-x-3">
+                <AuthComponent />
+                <ShoppingCartComponent />
+              </div>
             </nav>
           </div>
         </div>
@@ -192,9 +216,18 @@ const Hotels = () => {
                           <span className="text-2xl font-bold text-green-600">${hotel.price}</span>
                           <span className="text-sm text-gray-600">/night</span>
                         </div>
-                        <Button className="bg-green-600 hover:bg-green-700">
-                          Book Now
-                        </Button>
+                        <div className="space-x-2">
+                          <Button 
+                            variant="outline" 
+                            onClick={() => handleAddToCart(hotel)}
+                            className="text-green-600 border-green-600 hover:bg-green-50"
+                          >
+                            Add to Cart
+                          </Button>
+                          <Button className="bg-green-600 hover:bg-green-700">
+                            Book Now
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
