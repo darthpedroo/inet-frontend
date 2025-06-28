@@ -1,24 +1,14 @@
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plane, MapPin, Calendar, Users, Clock, ArrowRight } from "lucide-react";
+import { Plane, Clock, ArrowRight } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import ShoppingCartComponent from "@/components/ShoppingCart";
 import AuthComponent from "@/components/AuthComponent";
 
 const Flights = () => {
   const { addToCart } = useCart();
-  const [searchData, setSearchData] = useState({
-    from: "",
-    to: "",
-    departure: "",
-    return: "",
-    passengers: "1"
-  });
 
   const flights = [
     {
@@ -32,7 +22,6 @@ const Flights = () => {
       price: 899,
       stops: "Directo",
       class: "Económica",
-      image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&h=250&fit=crop",
       description: "Vuelo directo con servicio premium"
     },
     {
@@ -46,7 +35,6 @@ const Flights = () => {
       price: 749,
       stops: "Directo",
       class: "Económica",
-      image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&h=250&fit=crop",
       description: "Vuelo económico con excelente servicio"
     },
     {
@@ -60,8 +48,33 @@ const Flights = () => {
       price: 1299,
       stops: "Directo",
       class: "Ejecutiva",
-      image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&h=250&fit=crop",
       description: "Clase ejecutiva con máximo confort"
+    },
+    {
+      id: "flight-4",
+      airline: "Continental Air",
+      from: "Los Ángeles",
+      to: "Tokio",
+      departure: "11:00",
+      arrival: "15:45+1",
+      duration: "11h 45m",
+      price: 1150,
+      stops: "Directo",
+      class: "Económica",
+      description: "Vuelo transpacífico directo"
+    },
+    {
+      id: "flight-5",
+      airline: "Europe Express",
+      from: "Madrid",
+      to: "París",
+      departure: "16:30",
+      arrival: "18:15",
+      duration: "1h 45m",
+      price: 180,
+      stops: "Directo",
+      class: "Económica",
+      description: "Vuelo corto europeo"
     }
   ];
 
@@ -71,7 +84,6 @@ const Flights = () => {
       name: `${flight.airline} - ${flight.from} a ${flight.to}`,
       price: flight.price,
       type: 'FLIGHT',
-      image: flight.image,
       description: flight.description,
       details: {
         airline: flight.airline,
@@ -112,84 +124,17 @@ const Flights = () => {
         </div>
       </header>
 
-      {/* Search Section */}
+      {/* Sección Principal */}
       <section className="bg-blue-600 py-12">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-white text-center mb-8">Encuentra tu Vuelo Perfecto</h2>
-            
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
-                <div className="space-y-2">
-                  <Label>Origen</Label>
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input 
-                      placeholder="Ciudad de origen" 
-                      className="pl-10"
-                      value={searchData.from}
-                      onChange={(e) => setSearchData({...searchData, from: e.target.value})}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label>Destino</Label>
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input 
-                      placeholder="Ciudad de destino" 
-                      className="pl-10"
-                      value={searchData.to}
-                      onChange={(e) => setSearchData({...searchData, to: e.target.value})}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label>Salida</Label>
-                  <div className="relative">
-                    <Calendar className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input 
-                      type="date" 
-                      className="pl-10"
-                      value={searchData.departure}
-                      onChange={(e) => setSearchData({...searchData, departure: e.target.value})}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label>Regreso</Label>
-                  <div className="relative">
-                    <Calendar className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input 
-                      type="date" 
-                      className="pl-10"
-                      value={searchData.return}
-                      onChange={(e) => setSearchData({...searchData, return: e.target.value})}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label>Pasajeros</Label>
-                  <div className="relative">
-                    <Users className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input 
-                      placeholder="1 pasajero" 
-                      className="pl-10"
-                      value={searchData.passengers}
-                      onChange={(e) => setSearchData({...searchData, passengers: e.target.value})}
-                    />
-                  </div>
-                </div>
-              </div>
-              <Button className="w-full bg-blue-600 hover:bg-blue-700 h-12">
-                Buscar Vuelos
-              </Button>
-            </div>
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-white mb-4">Encuentra tu Vuelo Perfecto</h2>
+            <p className="text-blue-100">Los mejores vuelos a los destinos más increíbles</p>
           </div>
         </div>
       </section>
 
-      {/* Results Section */}
+      {/* Sección de Resultados */}
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
@@ -237,6 +182,8 @@ const Flights = () => {
                             <p className="text-sm text-gray-600">{flight.to}</p>
                           </div>
                         </div>
+                        
+                        <p className="text-sm text-gray-600 mt-4">{flight.description}</p>
                       </div>
                       
                       <div className="text-right ml-8">
