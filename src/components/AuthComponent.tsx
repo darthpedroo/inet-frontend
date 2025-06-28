@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,20 +13,90 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { loginUser, registerUser } from "@/lib/api";
 
 const AuthComponent = () => {
   const { isLoggedIn, login, logout, userEmail } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [tab, setTab] = useState<'login' | 'register'>('login');
+  const [registerEmail, setRegisterEmail] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
+  const [registerConfirm, setRegisterConfirm] = useState('');
+  const [registerName, setRegisterName] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [registerLoading, setRegisterLoading] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [registerError, setRegisterError] = useState<string | null>(null);
+  const [loginFieldErrors, setLoginFieldErrors] = useState<{[key:string]: string}>({});
+  const [registerFieldErrors, setRegisterFieldErrors] = useState<{[key:string]: string}>({});
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email && password) {
+    setLoginError(null);
+    setLoginFieldErrors({});
+    setLoginLoading(true);
+    try {
+      const data = await loginUser(email, password);
+      localStorage.setItem('travelToken', data.token);
       login(email);
       setIsOpen(false);
       setEmail('');
       setPassword('');
+    } catch (err: any) {
+      setLoginError(err.message);
+      if (err && err.response && err.response.errors) {
+        const fieldErrs: {[key:string]: string} = {};
+        err.response.errors.forEach((e: any) => {
+          fieldErrs[e.param] = e.msg;
+        });
+        setLoginFieldErrors(fieldErrs);
+      } else if (err && err.errors) {
+        // If error is a plain object
+        const fieldErrs: {[key:string]: string} = {};
+        err.errors.forEach((e: any) => {
+          fieldErrs[e.param] = e.msg;
+        });
+        setLoginFieldErrors(fieldErrs);
+      }
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setRegisterError(null);
+    setRegisterFieldErrors({});
+    setRegisterLoading(true);
+    try {
+      const data = await registerUser(registerEmail, registerPassword, registerName);
+      localStorage.setItem('travelToken', data.token);
+      login(registerEmail);
+      setIsOpen(false);
+      setRegisterEmail('');
+      setRegisterPassword('');
+      setRegisterConfirm('');
+      setRegisterName('');
+    } catch (err: any) {
+      setRegisterError(err.message);
+      if (err && err.response && err.response.errors) {
+        const fieldErrs: {[key:string]: string} = {};
+        err.response.errors.forEach((e: any) => {
+          fieldErrs[e.param] = e.msg;
+        });
+        setRegisterFieldErrors(fieldErrs);
+      } else if (err && err.errors) {
+        const fieldErrs: {[key:string]: string} = {};
+        err.errors.forEach((e: any) => {
+          fieldErrs[e.param] = e.msg;
+        });
+        setRegisterFieldErrors(fieldErrs);
+      }
+    } finally {
+      setRegisterLoading(false);
     }
   };
 
@@ -52,43 +121,117 @@ const AuthComponent = () => {
       <DialogTrigger asChild>
         <Button variant="outline">
           <User className="h-4 w-4 mr-2" />
-          Iniciar Sesión
+          Iniciar Sesión / Registrarse
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Iniciar Sesión</DialogTitle>
-          <DialogDescription>
-            Ingresa tus credenciales para acceder a tu cuenta y carrito.
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Correo Electrónico</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Ingresa tu correo electrónico"
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Contraseña</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Ingresa tu contraseña"
-              required
-            />
-          </div>
-          <Button type="submit" className="w-full">
-            Iniciar Sesión
-          </Button>
-        </form>
+        <Tabs value={tab} onValueChange={setTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-4">
+            <TabsTrigger value="login">Iniciar Sesión</TabsTrigger>
+            <TabsTrigger value="register">Registrarse</TabsTrigger>
+          </TabsList>
+          <TabsContent value="login">
+            <DialogHeader>
+              <DialogTitle>Iniciar Sesión</DialogTitle>
+              <DialogDescription>
+                Ingresa tus credenciales para acceder a tu cuenta y carrito.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleLogin} className="space-y-4 mt-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Correo Electrónico</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Ingresa tu correo electrónico"
+                  required
+                />
+                {loginFieldErrors.email && <div className="text-red-500 text-xs">{loginFieldErrors.email}</div>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Contraseña</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Ingresa tu contraseña"
+                  required
+                />
+                {loginFieldErrors.password && <div className="text-red-500 text-xs">{loginFieldErrors.password}</div>}
+              </div>
+              {loginError && <div className="text-red-500 text-sm">{loginError}</div>}
+              <Button type="submit" className="w-full" disabled={loginLoading}>
+                {loginLoading ? <span className="animate-spin mr-2">⏳</span> : null}
+                Iniciar Sesión
+              </Button>
+            </form>
+          </TabsContent>
+          <TabsContent value="register">
+            <DialogHeader>
+              <DialogTitle>Registrarse</DialogTitle>
+              <DialogDescription>
+                Crea una cuenta para guardar tu carrito y tus compras.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleRegister} className="space-y-4 mt-4">
+              <div className="space-y-2">
+                <Label htmlFor="registerName">Nombre</Label>
+                <Input
+                  id="registerName"
+                  type="text"
+                  value={registerName}
+                  onChange={(e) => setRegisterName(e.target.value)}
+                  placeholder="Tu nombre"
+                  required
+                />
+                {registerFieldErrors.name && <div className="text-red-500 text-xs">{registerFieldErrors.name}</div>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="registerEmail">Correo Electrónico</Label>
+                <Input
+                  id="registerEmail"
+                  type="email"
+                  value={registerEmail}
+                  onChange={(e) => setRegisterEmail(e.target.value)}
+                  placeholder="Ingresa tu correo electrónico"
+                  required
+                />
+                {registerFieldErrors.email && <div className="text-red-500 text-xs">{registerFieldErrors.email}</div>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="registerPassword">Contraseña</Label>
+                <Input
+                  id="registerPassword"
+                  type="password"
+                  value={registerPassword}
+                  onChange={(e) => setRegisterPassword(e.target.value)}
+                  placeholder="Crea una contraseña"
+                  required
+                />
+                {registerFieldErrors.password && <div className="text-red-500 text-xs">{registerFieldErrors.password}</div>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="registerConfirm">Confirmar Contraseña</Label>
+                <Input
+                  id="registerConfirm"
+                  type="password"
+                  value={registerConfirm}
+                  onChange={(e) => setRegisterConfirm(e.target.value)}
+                  placeholder="Repite tu contraseña"
+                  required
+                />
+              </div>
+              {registerError && <div className="text-red-500 text-sm">{registerError}</div>}
+              <Button type="submit" className="w-full" disabled={registerLoading || registerPassword !== registerConfirm}>
+                {registerLoading ? <span className="animate-spin mr-2">⏳</span> : null}
+                Registrarse
+              </Button>
+            </form>
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );

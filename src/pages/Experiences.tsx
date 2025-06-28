@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,125 +5,26 @@ import { Camera, MapPin, Clock, Star, Heart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import ShoppingCartComponent from "@/components/ShoppingCart";
 import AuthComponent from "@/components/AuthComponent";
+import { useEffect, useState } from "react";
+import { getExperiences } from "@/lib/api";
 
 const Experiences = () => {
-  const { addToCart } = useCart();
+  const { addToCart, isLoggedIn } = useCart();
+  const [experiences, setExperiences] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const experiences = [
-    {
-      id: "experience-1",
-      name: "Tour Gastronómico a Pie",
-      location: "Ciudad de México, MX",
-      duration: "3 horas",
-      price: 89,
-      rating: 4.9,
-      reviews: 432,
-      category: "Comida y Bebida",
-      description: "Descubre los mejores lugares de comida local con un guía experto"
-    },
-    {
-      id: "experience-2",
-      name: "Taller de Fotografía al Atardecer",
-      location: "San Francisco, CA",
-      duration: "2 horas",
-      price: 125,
-      rating: 4.8,
-      reviews: 256,
-      category: "Fotografía",
-      description: "Aprende técnicas de fotografía profesional durante la hora dorada"
-    },
-    {
-      id: "experience-3",
-      name: "Tour del Distrito Histórico",
-      location: "Boston, MA",
-      duration: "2.5 horas",
-      price: 45,
-      rating: 4.7,
-      reviews: 389,
-      category: "Historia",
-      description: "Explora siglos de historia americana en el distrito histórico"
-    },
-    {
-      id: "experience-4",
-      name: "Aventura en Kayak",
-      location: "Miami, FL",
-      duration: "4 horas",
-      price: 179,
-      rating: 4.9,
-      reviews: 198,
-      category: "Aventura",
-      description: "Navega por manglares y observa la vida silvestre local"
-    },
-    {
-      id: "experience-5",
-      name: "Experiencia de Cata de Vinos",
-      location: "Valle de Napa, CA",
-      duration: "6 horas",
-      price: 299,
-      rating: 4.8,
-      reviews: 156,
-      category: "Comida y Bebida",
-      description: "Visita bodegas premium y aprende sobre la elaboración del vino"
-    },
-    {
-      id: "experience-6",
-      name: "Aventura de Senderismo en Montaña",
-      location: "Denver, CO",
-      duration: "5 horas",
-      price: 149,
-      rating: 4.9,
-      reviews: 287,
-      category: "Aventura",
-      description: "Camina por senderos montañosos escénicos con guías experimentados"
-    },
-    {
-      id: "experience-7",
-      name: "Clase de Cocina Tradicional",
-      location: "Barcelona, España",
-      duration: "4 horas",
-      price: 95,
-      rating: 4.6,
-      reviews: 341,
-      category: "Comida y Bebida",
-      description: "Aprende a cocinar platos tradicionales españoles"
-    },
-    {
-      id: "experience-8",
-      name: "Tour Nocturno de Arte Urbano",
-      location: "Buenos Aires, Argentina",
-      duration: "3 horas",
-      price: 65,
-      rating: 4.8,
-      reviews: 203,
-      category: "Arte y Cultura",
-      description: "Descubre el arte callejero y murales más impresionantes de la ciudad"
-    }
-  ];
-
-  const categories = [
-    { name: "Todas", count: experiences.length },
-    { name: "Aventura", count: experiences.filter(e => e.category === "Aventura").length },
-    { name: "Comida y Bebida", count: experiences.filter(e => e.category === "Comida y Bebida").length },
-    { name: "Fotografía", count: experiences.filter(e => e.category === "Fotografía").length },
-    { name: "Historia", count: experiences.filter(e => e.category === "Historia").length },
-    { name: "Arte y Cultura", count: experiences.filter(e => e.category === "Arte y Cultura").length }
-  ];
-
-  const handleAddToCart = (experience: any) => {
-    addToCart({
-      id: experience.id,
-      name: experience.name,
-      price: experience.price,
-      type: 'EXPERIENCE',
-      description: experience.description,
-      details: {
-        location: experience.location,
-        duration: experience.duration,
-        rating: experience.rating,
-        category: experience.category
-      }
-    });
-  };
+  useEffect(() => {
+    getExperiences()
+      .then((data) => {
+        setExperiences(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -146,7 +46,7 @@ const Experiences = () => {
               <a href="/experiences" className="text-orange-600 font-medium">Experiencias</a>
               <div className="flex items-center space-x-3">
                 <AuthComponent />
-                <ShoppingCartComponent />
+                {isLoggedIn && <ShoppingCartComponent />}
               </div>
             </nav>
           </div>
@@ -167,82 +67,57 @@ const Experiences = () => {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            {/* Filtros de Categoría */}
-            <div className="flex flex-wrap gap-2 mb-8">
-              {categories.map((category) => (
-                <Button
-                  key={category.name}
-                  variant={category.name === "Todas" ? "default" : "outline"}
-                  className={category.name === "Todas" ? "bg-orange-600 hover:bg-orange-700" : ""}
-                >
-                  {category.name} ({category.count})
-                </Button>
-              ))}
-            </div>
 
-            {/* Grid de Experiencias */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {experiences.map((experience) => (
-                <Card key={experience.id} className="hover:shadow-lg transition-shadow overflow-hidden">
-                  <div className="relative p-4">
-                    <div className="absolute top-4 right-4">
-                      <Button variant="ghost" size="icon" className="bg-white/80 hover:bg-white">
-                        <Heart className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="mb-4">
-                      <Badge className="bg-orange-600 hover:bg-orange-700">
-                        {experience.category}
-                      </Badge>
-                    </div>
-                  </div>
-                  
-                  <CardHeader className="pb-3 pt-0">
-                    <div className="flex items-start justify-between">
-                      <CardTitle className="text-lg leading-tight">{experience.name}</CardTitle>
-                      <div className="flex items-center space-x-1 text-sm">
-                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                        <span className="font-medium">{experience.rating}</span>
-                        <span className="text-gray-500">({experience.reviews})</span>
+            <h3 className="text-2xl font-bold text-gray-900 mb-8">Experiencias Disponibles</h3>
+            {loading ? (
+              <div className="text-center text-gray-500">Cargando experiencias...</div>
+            ) : error ? (
+              <div className="text-center text-red-500">{error}</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {experiences.map((experience) => (
+                  <Card key={experience.id} className="hover:shadow-lg transition-shadow overflow-hidden">
+                    <CardHeader>
+                      <CardTitle>{experience.name}</CardTitle>
+                      <CardDescription>{experience.location || '-'}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-600 mb-4">{experience.description}</p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <Badge variant="secondary" className="text-xs">
+                          {experience.category || 'Excursión'}
+                        </Badge>
                       </div>
-                    </div>
-                    <CardDescription className="flex items-center space-x-4 text-sm">
-                      <span className="flex items-center space-x-1">
-                        <MapPin className="h-4 w-4" />
-                        <span>{experience.location}</span>
-                      </span>
-                      <span className="flex items-center space-x-1">
-                        <Clock className="h-4 w-4" />
-                        <span>{experience.duration}</span>
-                      </span>
-                    </CardDescription>
-                  </CardHeader>
-                  
-                  <CardContent className="pt-0">
-                    <p className="text-gray-600 mb-4">{experience.description}</p>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-2xl font-bold text-orange-600">${experience.price}</span>
-                        <span className="text-sm text-gray-600">/persona</span>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-2xl font-bold text-orange-600">${experience.price}</span>
+                          <span className="text-sm text-gray-600">/persona</span>
+                        </div>
+                        <div className="space-x-2">
+                          <Button 
+                            variant="outline" 
+                            onClick={() => addToCart({
+                              id: experience.id,
+                              name: experience.name,
+                              price: experience.price,
+                              type: 'EXPERIENCE',
+                              description: experience.description,
+                              details: experience
+                            })}
+                            className="text-orange-600 border-orange-600 hover:bg-orange-50"
+                          >
+                            Agregar al Carrito
+                          </Button>
+                          <Button className="bg-orange-600 hover:bg-orange-700">
+                            Reservar Ahora
+                          </Button>
+                        </div>
                       </div>
-                      <div className="space-x-2">
-                        <Button 
-                          variant="outline" 
-                          onClick={() => handleAddToCart(experience)}
-                          className="text-orange-600 border-orange-600 hover:bg-orange-50"
-                        >
-                          Agregar al Carrito
-                        </Button>
-                        <Button className="bg-orange-600 hover:bg-orange-700">
-                          Reservar Ahora
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>

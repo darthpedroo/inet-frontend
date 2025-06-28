@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,46 +8,26 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar, Star, Plane, Hotel, Car, Camera } from "lucide-react";
 import ShoppingCartComponent from "@/components/ShoppingCart";
 import AuthComponent from "@/components/AuthComponent";
+import { getPackages } from "@/lib/api";
+import { useCart } from "@/contexts/CartContext";
 
 const Index = () => {
-  const featuredPackages = [
-    {
-      id: 1,
-      name: "Escapada al Paraíso",
-      destination: "Maldivas",
-      price: 2499,
-      originalPrice: 2999,
-      duration: "7 días",
-      rating: 4.9,
-      reviews: 324,
-      includes: ["Vuelo", "Resort", "Todo incluido", "Spa"],
-      description: "Villas de lujo sobre el agua con playas pristinas"
-    },
-    {
-      id: 2,
-      name: "Aventura Europea",
-      destination: "París, Roma, Barcelona",
-      price: 1899,
-      originalPrice: 2299,
-      duration: "12 días",
-      rating: 4.8,
-      reviews: 156,
-      includes: ["Vuelos", "Hoteles", "Tours", "Transporte"],
-      description: "Explora las ciudades más icónicas de Europa"
-    },
-    {
-      id: 3,
-      name: "Escape Tropical",
-      destination: "Costa Rica",
-      price: 1299,
-      originalPrice: 1599,
-      duration: "8 días",
-      rating: 4.7,
-      reviews: 89,
-      includes: ["Vuelo", "Eco-lodge", "Aventuras", "Vida silvestre"],
-      description: "Aventuras en la selva tropical y playas pristinas"
-    }
-  ];
+  const [packages, setPackages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { isLoggedIn } = useCart();
+
+  useEffect(() => {
+    getPackages()
+      .then((data) => {
+        setPackages(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -75,7 +54,7 @@ const Index = () => {
 
             <div className="flex items-center space-x-3">
               <AuthComponent />
-              <ShoppingCartComponent />
+              {isLoggedIn && <ShoppingCartComponent />}
             </div>
           </div>
         </div>
@@ -107,57 +86,55 @@ const Index = () => {
             <h3 className="text-4xl font-bold text-gray-900 mb-4">Paquetes de Viaje Destacados</h3>
             <p className="text-xl text-gray-600">Destinos seleccionados para tu escapada perfecta</p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredPackages.map((pkg) => (
-              <Card key={pkg.id} className="group hover:shadow-xl transition-all duration-300 border-0 bg-white overflow-hidden">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-xl">{pkg.name}</CardTitle>
-                    <div className="text-right">
-                      <div className="text-sm text-slate-500 line-through">${pkg.originalPrice}</div>
-                      <div className="text-2xl font-bold text-blue-600">${pkg.price}</div>
+          {loading ? (
+            <div className="text-center text-gray-500">Cargando paquetes...</div>
+          ) : error ? (
+            <div className="text-center text-red-500">{error}</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {packages.map((pkg) => (
+                <Card key={pkg.id} className="group hover:shadow-xl transition-all duration-300 border-0 bg-white overflow-hidden">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-xl">{pkg.name}</CardTitle>
+                      <div className="text-right">
+                        <div className="text-sm text-slate-500 line-through">${pkg.originalPrice || ''}</div>
+                        <div className="text-2xl font-bold text-blue-600">${pkg.price}</div>
+                      </div>
                     </div>
-                  </div>
-                  <CardDescription className="flex items-center space-x-4 text-sm">
-                    <span className="flex items-center space-x-1">
-                      <MapPin className="h-4 w-4" />
-                      <span>{pkg.destination}</span>
-                    </span>
-                    <span className="flex items-center space-x-1">
-                      <Calendar className="h-4 w-4" />
-                      <span>{pkg.duration}</span>
-                    </span>
-                  </CardDescription>
-                  <div className="flex items-center space-x-1 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 w-fit">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm font-medium">{pkg.rating}</span>
-                    <span className="text-sm text-slate-500">({pkg.reviews})</span>
-                  </div>
-                </CardHeader>
-                
-                <CardContent>
-                  <p className="text-slate-600 mb-4">{pkg.description}</p>
-                  
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {pkg.includes.map((item, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
-                        {item === "Vuelo" && <Plane className="h-3 w-3 mr-1" />}
-                        {item === "Resort" && <Hotel className="h-3 w-3 mr-1" />}
-                        {item === "Transporte" && <Car className="h-3 w-3 mr-1" />}
-                        {item === "Tours" && <Camera className="h-3 w-3 mr-1" />}
-                        {item}
-                      </Badge>
-                    ))}
-                  </div>
-                  
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                    Ver Detalles
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                    <CardDescription className="flex items-center space-x-4 text-sm">
+                      <span className="flex items-center space-x-1">
+                        <MapPin className="h-4 w-4" />
+                        <span>{pkg.destination || '-'}</span>
+                      </span>
+                      <span className="flex items-center space-x-1">
+                        <Calendar className="h-4 w-4" />
+                        <span>{pkg.duration || '-'}</span>
+                      </span>
+                    </CardDescription>
+                    <div className="flex items-center space-x-1 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 w-fit">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span className="text-sm font-medium">{pkg.rating || '-'}</span>
+                      <span className="text-sm text-slate-500">({pkg.reviews || 0})</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-slate-600 mb-4">{pkg.description}</p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {(pkg.products || []).map((product: any, index: number) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          {product.type}
+                        </Badge>
+                      ))}
+                    </div>
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                      Ver Detalles
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
