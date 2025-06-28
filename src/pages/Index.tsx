@@ -56,25 +56,26 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Navigation Header */}
-      <header className="bg-white/95 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-50">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+              <div className="bg-blue-600 p-2 rounded-lg">
                 <Plane className="h-6 w-6 text-white" />
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold text-gray-900">
                 TravelHub
               </h1>
             </div>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#" className="text-slate-600 hover:text-slate-900 transition-colors">Packages</a>
-              <a href="#" className="text-slate-600 hover:text-slate-900 transition-colors">Flights</a>
-              <a href="#" className="text-slate-600 hover:text-slate-900 transition-colors">Hotels</a>
-              <a href="#" className="text-slate-600 hover:text-slate-900 transition-colors">Experiences</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Packages</a>
+              <a href="/flights" className="text-gray-600 hover:text-gray-900 transition-colors">Flights</a>
+              <a href="/hotels" className="text-gray-600 hover:text-gray-900 transition-colors">Hotels</a>
+              <a href="/transport" className="text-gray-600 hover:text-gray-900 transition-colors">Transport</a>
+              <a href="/experiences" className="text-gray-600 hover:text-gray-900 transition-colors">Experiences</a>
             </nav>
 
             <div className="flex items-center space-x-3">
@@ -95,7 +96,7 @@ const Index = () => {
                       <Label htmlFor="password">Password</Label>
                       <Input id="password" type="password" placeholder="Enter your password" />
                     </div>
-                    <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
                       Sign In
                     </Button>
                     <div className="text-center text-sm text-slate-600">
@@ -113,7 +114,7 @@ const Index = () => {
 
               <Dialog open={registerOpen} onOpenChange={setRegisterOpen}>
                 <DialogTrigger asChild>
-                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                  <Button className="bg-blue-600 hover:bg-blue-700">
                     Get Started
                   </Button>
                 </DialogTrigger>
@@ -140,7 +141,7 @@ const Index = () => {
                       <Label htmlFor="registerPassword">Password</Label>
                       <Input id="registerPassword" type="password" placeholder="Create a password" />
                     </div>
-                    <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
                       Create Account
                     </Button>
                     <div className="text-center text-sm text-slate-600">
@@ -162,22 +163,22 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="relative py-20 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
+        <div className="absolute inset-0 bg-blue-50"></div>
         <div className="container mx-auto relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <h2 className="text-5xl md:text-7xl font-bold text-slate-900 mb-6">
+            <h2 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6">
               Your Next
-              <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="block text-blue-600">
                 Adventure Awaits
               </span>
             </h2>
-            <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
               Discover amazing travel packages, book flights, find perfect accommodations, 
               and create unforgettable memories around the world.
             </p>
             
             {/* Search Bar */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 max-w-4xl mx-auto mb-12">
+            <div className="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto mb-12">
               <Tabs defaultValue="packages" className="w-full">
                 <TabsList className="grid w-full grid-cols-4 mb-6">
                   <TabsTrigger value="packages">Packages</TabsTrigger>
@@ -217,26 +218,41 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                  <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-12">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 h-12">
                     Search Packages
                   </Button>
                 </TabsContent>
                 
                 <TabsContent value="flights">
                   <div className="text-center py-8 text-slate-500">
-                    Flight search coming soon...
+                    <Button 
+                      onClick={() => window.location.href = '/flights'}
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      Go to Flights
+                    </Button>
                   </div>
                 </TabsContent>
                 
                 <TabsContent value="hotels">
                   <div className="text-center py-8 text-slate-500">
-                    Hotel search coming soon...
+                    <Button 
+                      onClick={() => window.location.href = '/hotels'}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      Go to Hotels
+                    </Button>
                   </div>
                 </TabsContent>
                 
                 <TabsContent value="experiences">
                   <div className="text-center py-8 text-slate-500">
-                    Experience search coming soon...
+                    <Button 
+                      onClick={() => window.location.href = '/experiences'}
+                      className="bg-orange-600 hover:bg-orange-700"
+                    >
+                      Go to Experiences
+                    </Button>
                   </div>
                 </TabsContent>
               </Tabs>
@@ -246,16 +262,16 @@ const Index = () => {
       </section>
 
       {/* Featured Packages */}
-      <section className="py-20 px-4 bg-slate-50">
+      <section className="py-20 px-4 bg-white">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h3 className="text-4xl font-bold text-slate-900 mb-4">Featured Travel Packages</h3>
-            <p className="text-xl text-slate-600">Handpicked destinations for your perfect getaway</p>
+            <h3 className="text-4xl font-bold text-gray-900 mb-4">Featured Travel Packages</h3>
+            <p className="text-xl text-gray-600">Handpicked destinations for your perfect getaway</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredPackages.map((pkg) => (
-              <Card key={pkg.id} className="group hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm overflow-hidden">
+              <Card key={pkg.id} className="group hover:shadow-xl transition-all duration-300 border-0 bg-white overflow-hidden">
                 <div className="relative overflow-hidden">
                   <img 
                     src={pkg.image} 
@@ -309,7 +325,7 @@ const Index = () => {
                     ))}
                   </div>
                   
-                  <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
                     View Details
                   </Button>
                 </CardContent>
@@ -320,26 +336,30 @@ const Index = () => {
       </section>
 
       {/* Categories Section */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 bg-gray-50">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h3 className="text-4xl font-bold text-slate-900 mb-4">Explore by Category</h3>
-            <p className="text-xl text-slate-600">Find exactly what you're looking for</p>
+            <h3 className="text-4xl font-bold text-gray-900 mb-4">Explore by Category</h3>
+            <p className="text-xl text-gray-600">Find exactly what you're looking for</p>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { name: "Flights", icon: Plane, color: "from-blue-500 to-blue-600" },
-              { name: "Hotels", icon: Hotel, color: "from-green-500 to-green-600" },
-              { name: "Transport", icon: Car, color: "from-purple-500 to-purple-600" },
-              { name: "Experiences", icon: Camera, color: "from-orange-500 to-orange-600" }
+              { name: "Flights", icon: Plane, color: "bg-blue-600", href: "/flights" },
+              { name: "Hotels", icon: Hotel, color: "bg-green-600", href: "/hotels" },
+              { name: "Transport", icon: Car, color: "bg-purple-600", href: "/transport" },
+              { name: "Experiences", icon: Camera, color: "bg-orange-600", href: "/experiences" }
             ].map((category) => (
-              <Card key={category.name} className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-0 bg-gradient-to-br from-white to-slate-50">
+              <Card 
+                key={category.name} 
+                className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-0 bg-white"
+                onClick={() => window.location.href = category.href}
+              >
                 <CardContent className="p-8 text-center">
-                  <div className={`bg-gradient-to-r ${category.color} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`${category.color} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <category.icon className="h-8 w-8 text-white" />
                   </div>
-                  <h4 className="text-lg font-semibold text-slate-900">{category.name}</h4>
+                  <h4 className="text-lg font-semibold text-gray-900">{category.name}</h4>
                 </CardContent>
               </Card>
             ))}
@@ -348,12 +368,12 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-12 px-4">
+      <footer className="bg-gray-900 text-white py-12 px-4">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+                <div className="bg-blue-600 p-2 rounded-lg">
                   <Plane className="h-6 w-6 text-white" />
                 </div>
                 <h4 className="text-xl font-bold">TravelHub</h4>
@@ -374,10 +394,10 @@ const Index = () => {
             <div>
               <h5 className="font-semibold mb-4">Services</h5>
               <ul className="space-y-2 text-slate-400">
-                <li><a href="#" className="hover:text-white transition-colors">Flight Booking</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Hotel Reservations</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Car Rentals</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Travel Insurance</a></li>
+                <li><a href="/flights" className="hover:text-white transition-colors">Flight Booking</a></li>
+                <li><a href="/hotels" className="hover:text-white transition-colors">Hotel Reservations</a></li>
+                <li><a href="/transport" className="hover:text-white transition-colors">Car Rentals</a></li>
+                <li><a href="/experiences" className="hover:text-white transition-colors">Travel Experiences</a></li>
               </ul>
             </div>
             
