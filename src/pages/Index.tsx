@@ -36,16 +36,15 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <Plane className="h-6 w-6 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                TravelHub
-              </h1>
+              <a href="/" className="flex items-center space-x-2 group">
+                <div className="bg-blue-600 p-2 rounded-lg group-hover:scale-105 transition-transform">
+                  <Plane className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-2xl font-bold text-gray-900 group-hover:text-blue-700 transition-colors">TravelHub</span>
+              </a>
             </div>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Paquetes</a>
               <a href="/flights" className="text-gray-600 hover:text-gray-900 transition-colors">Vuelos</a>
               <a href="/hotels" className="text-gray-600 hover:text-gray-900 transition-colors">Hoteles</a>
               <a href="/transport" className="text-gray-600 hover:text-gray-900 transition-colors">Transporte</a>
@@ -66,106 +65,58 @@ const Index = () => {
         <div className="container mx-auto relative z-10">
           <div className="text-center max-w-4xl mx-auto">
             <h2 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6">
-              Tu Próxima
+              ¡Bienvenido a TravelHub!
               <span className="block text-blue-600">
-                Aventura Te Espera
+                Tu aventura comienza aquí
               </span>
             </h2>
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Descubre increíbles paquetes de viaje, reserva vuelos, encuentra alojamientos perfectos 
-              y crea recuerdos inolvidables alrededor del mundo.
+              Explora y reserva vuelos, encuentra alojamientos perfectos, elige tu transporte ideal y descubre experiencias únicas alrededor del mundo. ¡Empieza a planear tu próximo viaje con un solo clic!
             </p>
           </div>
         </div>
       </section>
 
-      {/* Paquetes Destacados */}
+      {/* Sección de Navegación Destacada */}
       <section className="py-20 px-4 bg-white">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h3 className="text-4xl font-bold text-gray-900 mb-4">Paquetes de Viaje Destacados</h3>
-            <p className="text-xl text-gray-600">Destinos seleccionados para tu escapada perfecta</p>
+            <h3 className="text-4xl font-bold text-gray-900 mb-4">¿Qué quieres hacer hoy?</h3>
+            <p className="text-xl text-gray-600">Accede rápidamente a las principales secciones de la plataforma</p>
           </div>
-          {loading ? (
-            <div className="text-center text-gray-500">Cargando paquetes...</div>
-          ) : error ? (
-            <div className="text-center text-red-500">{error}</div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {packages.map((pkg) => (
-                <Card key={pkg.id} className="group hover:shadow-xl transition-all duration-300 border-0 bg-white overflow-hidden">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl">{pkg.name}</CardTitle>
-                      <div className="text-right">
-                        <div className="text-sm text-slate-500 line-through">${pkg.originalPrice || ''}</div>
-                        <div className="text-2xl font-bold text-blue-600">${pkg.price}</div>
-                      </div>
-                    </div>
-                    <CardDescription className="flex items-center space-x-4 text-sm">
-                      <span className="flex items-center space-x-1">
-                        <MapPin className="h-4 w-4" />
-                        <span>{pkg.destination || '-'}</span>
-                      </span>
-                      <span className="flex items-center space-x-1">
-                        <Calendar className="h-4 w-4" />
-                        <span>{pkg.duration || '-'}</span>
-                      </span>
-                    </CardDescription>
-                    <div className="flex items-center space-x-1 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 w-fit">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-medium">{pkg.rating || '-'}</span>
-                      <span className="text-sm text-slate-500">({pkg.reviews || 0})</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-slate-600 mb-4">{pkg.description}</p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {(pkg.products || []).map((product: any, index: number) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {product.type}
-                        </Badge>
-                      ))}
-                    </div>
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                      Ver Detalles
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Sección de Categorías */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h3 className="text-4xl font-bold text-gray-900 mb-4">Explorar por Categoría</h3>
-            <p className="text-xl text-gray-600">Encuentra exactamente lo que estás buscando</p>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { name: "Vuelos", icon: Plane, color: "bg-blue-600", href: "/flights" },
-              { name: "Hoteles", icon: Hotel, color: "bg-green-600", href: "/hotels" },
-              { name: "Transporte", icon: Car, color: "bg-purple-600", href: "/transport" },
-              { name: "Experiencias", icon: Camera, color: "bg-orange-600", href: "/experiences" }
-            ].map((category) => (
-              <Card 
-                key={category.name} 
-                className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-0 bg-white"
-                onClick={() => window.location.href = category.href}
-              >
-                <CardContent className="p-8 text-center">
-                  <div className={`${category.color} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <category.icon className="h-8 w-8 text-white" />
-                  </div>
-                  <h4 className="text-lg font-semibold text-gray-900">{category.name}</h4>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <a href="/flights">
+              <Card className="group hover:shadow-xl transition-all duration-300 border-0 bg-blue-50 overflow-hidden cursor-pointer">
+                <CardContent className="flex flex-col items-center py-8">
+                  <Plane className="h-10 w-10 text-blue-600 mb-4" />
+                  <span className="text-lg font-semibold text-blue-700">Vuelos</span>
                 </CardContent>
               </Card>
-            ))}
+            </a>
+            <a href="/hotels">
+              <Card className="group hover:shadow-xl transition-all duration-300 border-0 bg-green-50 overflow-hidden cursor-pointer">
+                <CardContent className="flex flex-col items-center py-8">
+                  <Hotel className="h-10 w-10 text-green-600 mb-4" />
+                  <span className="text-lg font-semibold text-green-700">Hoteles</span>
+                </CardContent>
+              </Card>
+            </a>
+            <a href="/transport">
+              <Card className="group hover:shadow-xl transition-all duration-300 border-0 bg-purple-50 overflow-hidden cursor-pointer">
+                <CardContent className="flex flex-col items-center py-8">
+                  <Car className="h-10 w-10 text-purple-600 mb-4" />
+                  <span className="text-lg font-semibold text-purple-700">Transporte</span>
+                </CardContent>
+              </Card>
+            </a>
+            <a href="/experiences">
+              <Card className="group hover:shadow-xl transition-all duration-300 border-0 bg-orange-50 overflow-hidden cursor-pointer">
+                <CardContent className="flex flex-col items-center py-8">
+                  <Camera className="h-10 w-10 text-orange-600 mb-4" />
+                  <span className="text-lg font-semibold text-orange-700">Experiencias</span>
+                </CardContent>
+              </Card>
+            </a>
           </div>
         </div>
       </section>

@@ -63,4 +63,56 @@ export async function registerUser(email: string, password: string, name: string
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || 'Error al registrarse');
   return data;
+}
+
+export async function getCart() {
+  const res = await fetch('http://localhost:3000/api/cart', {
+    headers: {
+      ...getAuthHeaders(),
+    },
+  });
+  if (!res.ok) throw new Error('Failed to fetch cart');
+  return res.json();
+}
+
+export async function addCartItem({ productId, packageId, quantity }: { productId?: string; packageId?: string; quantity: number; }) {
+  const res = await fetch('http://localhost:3000/api/cart/items', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    body: JSON.stringify({ productId, packageId, quantity })
+  });
+  if (!res.ok) throw new Error('Failed to add item to cart');
+  return res.json();
+}
+
+export async function updateCartItem(id: string, quantity: number) {
+  const res = await fetch(`http://localhost:3000/api/cart/items/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    body: JSON.stringify({ quantity })
+  });
+  if (!res.ok) throw new Error('Failed to update cart item');
+  return res.json();
+}
+
+export async function removeCartItem(id: string) {
+  const res = await fetch(`http://localhost:3000/api/cart/items/${id}`, {
+    method: 'DELETE',
+    headers: {
+      ...getAuthHeaders(),
+    },
+  });
+  if (!res.ok) throw new Error('Failed to remove cart item');
+  return res.json();
+}
+
+export async function clearCartApi(cartItems: { id: string }[]) {
+  // Remove all items in parallel
+  await Promise.all(cartItems.map(item => removeCartItem(item.id)));
 } 

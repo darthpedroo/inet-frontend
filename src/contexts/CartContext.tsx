@@ -1,5 +1,11 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import {
+  getCart,
+  addCartItem as apiAddCartItem,
+  updateCartItem as apiUpdateCartItem,
+  removeCartItem as apiRemoveCartItem,
+  clearCartApi
+} from "@/lib/api";
 
 export interface CartItem {
   id: string;
@@ -33,62 +39,122 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
-  // Load cart from localStorage on mount
+  // Persist login state and user email across reloads
   useEffect(() => {
-    const savedCart = localStorage.getItem('travelCart');
+    const token = localStorage.getItem('travelToken');
     const savedAuth = localStorage.getItem('travelAuth');
-    
-    if (savedCart) {
-      setItems(JSON.parse(savedCart));
-    }
-    
-    if (savedAuth) {
-      const authData = JSON.parse(savedAuth);
+    if (token && savedAuth) {
       setIsLoggedIn(true);
-      setUserEmail(authData.email);
+      try {
+        const authData = JSON.parse(savedAuth);
+        setUserEmail(authData.email);
+      } catch {
+        setUserEmail(null);
+      }
+    } else {
+      setIsLoggedIn(false);
+      setUserEmail(null);
     }
   }, []);
 
-  // Save cart to localStorage whenever items change
+  // Fetch cart from API when logged in
   useEffect(() => {
-    localStorage.setItem('travelCart', JSON.stringify(items));
-  }, [items]);
+    if (isLoggedIn) {
+      getCart()
+        .then(cart => {
+          setItems(
+            (cart.items || []).map((item: any) => ({
+              id: item.id,
+              name: item.product?.name || item.package?.name || '',
+              price: item.product?.price || item.package?.price || 0,
+              type: item.product?.type || 'PACKAGE',
+              image: item.product?.image || item.package?.image,
+              description: item.product?.description || item.package?.description || '',
+              quantity: item.quantity,
+              details: item.product || item.package
+            }))
+          );
+        })
+        .catch(() => setItems([]));
+    } else {
+      setItems([]);
+    }
+  }, [isLoggedIn]);
 
-  const addToCart = (item: Omit<CartItem, 'quantity'>) => {
+  const addToCart = async (item: Omit<CartItem, 'quantity'>) => {
     if (!isLoggedIn) {
       alert('Por favor inicia sesión para agregar elementos a tu carrito');
       return;
     }
-
-    setItems(prevItems => {
-      const existingItem = prevItems.find(i => i.id === item.id);
-      if (existingItem) {
-        return prevItems.map(i =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      }
-      return [...prevItems, { ...item, quantity: 1 }];
-    });
+    try {
+      // Determine if it's a product or package
+      const isPackage = item.type === 'PACKAGE';
+      const res = await apiAddCartItem({
+        productId: isPackage ? undefined : item.id,
+        packageId: isPackage ? item.id : undefined,
+        quantity: 1
+      });
+      // Refetch cart
+      const cart = await getCart();
+      setItems(
+        (cart.items || []).map((item: any) => ({
+          id: item.id,
+          name: item.product?.name || item.package?.name || '',
+          price: item.product?.price || item.package?.price || 0,
+          type: item.product?.type || 'PACKAGE',
+          image: item.product?.image || item.package?.image,
+          description: item.product?.description || item.package?.description || '',
+          quantity: item.quantity,
+          details: item.product || item.package
+        }))
+      );
+    } catch (e) {
+      alert('Error al agregar al carrito');
+    }
   };
 
-  const removeFromCart = (id: string) => {
-    setItems(prevItems => prevItems.filter(item => item.id !== id));
+  const removeFromCart = async (id: string) => {
+    try {
+      await apiRemoveCartItem(id);
+      // Refetch cart to ensure sync
+      const cart = await getCart();
+      setItems(
+        (cart.items || []).map((item: any) => ({
+          id: item.id,
+          name: item.product?.name || item.package?.name || '',
+          price: item.product?.price || item.package?.price || 0,
+          type: item.product?.type || 'PACKAGE',
+          image: item.product?.image || item.package?.image,
+          description: item.product?.description || item.package?.description || '',
+          quantity: item.quantity,
+          details: item.product || item.package
+        }))
+      );
+    } catch (e) {
+      alert('Error al quitar del carrito');
+    }
   };
 
-  const updateQuantity = (id: string, quantity: number) => {
+  const updateQuantity = async (id: string, quantity: number) => {
     if (quantity <= 0) {
-      removeFromCart(id);
+      await removeFromCart(id);
       return;
     }
-    setItems(prevItems =>
-      prevItems.map(item =>
-        item.id === id ? { ...item, quantity } : item
-      )
-    );
+    try {
+      await apiUpdateCartItem(id, quantity);
+      setItems(prev => prev.map(item => item.id === id ? { ...item, quantity } : item));
+    } catch (e) {
+      alert('Error al actualizar cantidad');
+    }
   };
 
-  const clearCart = () => {
-    setItems([]);
+  const clearCart = async () => {
+    try {
+      await clearCartApi(items);
+      setItems([]);
+    } catch (e) {
+      alert('Error al vaciar el carrito');
+    }
   };
 
   const getTotalPrice = () => {
@@ -109,7 +175,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoggedIn(false);
     setUserEmail(null);
     localStorage.removeItem('travelAuth');
-    clearCart();
+    setItems([]);
   };
 
   return (

@@ -34,13 +34,14 @@ const Transport = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="bg-purple-600 p-2 rounded-lg">
-                <Car className="h-6 w-6 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold text-gray-900">TravelHub</h1>
+              <a href="/" className="flex items-center space-x-2 group">
+                <div className="bg-purple-600 p-2 rounded-lg group-hover:scale-105 transition-transform">
+                  <Car className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-2xl font-bold text-gray-900 group-hover:text-purple-700 transition-colors">TravelHub</span>
+              </a>
             </div>
             <nav className="flex items-center space-x-6">
-              <a href="/" className="text-gray-600 hover:text-gray-900">Inicio</a>
               <a href="/flights" className="text-gray-600 hover:text-gray-900">Vuelos</a>
               <a href="/hotels" className="text-gray-600 hover:text-gray-900">Hoteles</a>
               <a href="/transport" className="text-purple-600 font-medium">Transporte</a>
@@ -100,9 +101,6 @@ const Transport = () => {
                               className="text-purple-600 border-purple-600 hover:bg-purple-50"
                             >
                               Agregar al Carrito
-                            </Button>
-                            <Button className="bg-purple-600 hover:bg-purple-700">
-                              Reservar Ahora
                             </Button>
                           </div>
                         </div>

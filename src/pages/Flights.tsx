@@ -33,13 +33,14 @@ const Flights = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <Plane className="h-6 w-6 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold text-gray-900">TravelHub</h1>
+              <a href="/" className="flex items-center space-x-2 group">
+                <div className="bg-blue-600 p-2 rounded-lg group-hover:scale-105 transition-transform">
+                  <Plane className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-2xl font-bold text-gray-900 group-hover:text-blue-700 transition-colors">TravelHub</span>
+              </a>
             </div>
             <nav className="flex items-center space-x-6">
-              <a href="/" className="text-gray-600 hover:text-gray-900">Inicio</a>
               <a href="/flights" className="text-blue-600 font-medium">Vuelos</a>
               <a href="/hotels" className="text-gray-600 hover:text-gray-900">Hoteles</a>
               <a href="/transport" className="text-gray-600 hover:text-gray-900">Transporte</a>
@@ -131,9 +132,6 @@ const Flights = () => {
                               className="text-blue-600 border-blue-600 hover:bg-blue-50"
                             >
                               Agregar al Carrito
-                            </Button>
-                            <Button className="bg-blue-600 hover:bg-blue-700">
-                              Reservar Ahora
                             </Button>
                           </div>
                         </div>

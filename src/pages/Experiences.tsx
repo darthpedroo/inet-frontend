@@ -33,13 +33,14 @@ const Experiences = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="bg-orange-600 p-2 rounded-lg">
-                <Camera className="h-6 w-6 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold text-gray-900">TravelHub</h1>
+              <a href="/" className="flex items-center space-x-2 group">
+                <div className="bg-orange-600 p-2 rounded-lg group-hover:scale-105 transition-transform">
+                  <Camera className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-2xl font-bold text-gray-900 group-hover:text-orange-700 transition-colors">TravelHub</span>
+              </a>
             </div>
             <nav className="flex items-center space-x-6">
-              <a href="/" className="text-gray-600 hover:text-gray-900">Inicio</a>
               <a href="/flights" className="text-gray-600 hover:text-gray-900">Vuelos</a>
               <a href="/hotels" className="text-gray-600 hover:text-gray-900">Hoteles</a>
               <a href="/transport" className="text-gray-600 hover:text-gray-900">Transporte</a>
@@ -107,9 +108,6 @@ const Experiences = () => {
                             className="text-orange-600 border-orange-600 hover:bg-orange-50"
                           >
                             Agregar al Carrito
-                          </Button>
-                          <Button className="bg-orange-600 hover:bg-orange-700">
-                            Reservar Ahora
                           </Button>
                         </div>
                       </div>
