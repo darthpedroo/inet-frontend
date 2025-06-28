@@ -20,8 +20,19 @@ const ShoppingCartComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleCheckout = () => {
-    alert('Checkout functionality will be implemented with backend integration');
+    alert('La funcionalidad de pago será implementada con la integración del backend');
     setIsOpen(false);
+  };
+
+  const getTypeLabel = (type: string) => {
+    switch (type) {
+      case 'FLIGHT': return 'vuelo';
+      case 'HOTEL': return 'hotel';
+      case 'TRANSPORT': return 'transporte';
+      case 'EXPERIENCE': return 'experiencia';
+      case 'PACKAGE': return 'paquete';
+      default: return type.toLowerCase();
+    }
   };
 
   return (
@@ -29,7 +40,7 @@ const ShoppingCartComponent = () => {
       <SheetTrigger asChild>
         <Button variant="outline" className="relative">
           <ShoppingCart className="h-4 w-4 mr-2" />
-          Cart
+          Carrito
           {getTotalItems() > 0 && (
             <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
               {getTotalItems()}
@@ -39,9 +50,9 @@ const ShoppingCartComponent = () => {
       </SheetTrigger>
       <SheetContent className="w-[400px] sm:w-[540px]">
         <SheetHeader>
-          <SheetTitle>Shopping Cart</SheetTitle>
+          <SheetTitle>Carrito de Compras</SheetTitle>
           <SheetDescription>
-            {getTotalItems() > 0 ? `${getTotalItems()} item(s) in your cart` : 'Your cart is empty'}
+            {getTotalItems() > 0 ? `${getTotalItems()} artículo(s) en tu carrito` : 'Tu carrito está vacío'}
           </SheetDescription>
         </SheetHeader>
         
@@ -49,8 +60,8 @@ const ShoppingCartComponent = () => {
           {items.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <ShoppingCart className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>Your cart is empty</p>
-              <p className="text-sm">Add some travel products to get started</p>
+              <p>Tu carrito está vacío</p>
+              <p className="text-sm">Agrega algunos productos de viaje para comenzar</p>
             </div>
           ) : (
             items.map((item) => (
@@ -69,7 +80,7 @@ const ShoppingCartComponent = () => {
                         <h4 className="font-medium text-sm">{item.name}</h4>
                         <p className="text-xs text-gray-600 mt-1">{item.description}</p>
                         <Badge variant="secondary" className="mt-2 text-xs">
-                          {item.type.toLowerCase()}
+                          {getTypeLabel(item.type)}
                         </Badge>
                       </div>
                       <Button
@@ -104,7 +115,7 @@ const ShoppingCartComponent = () => {
                       <div className="text-right">
                         <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
                         {item.quantity > 1 && (
-                          <p className="text-xs text-gray-500">${item.price} each</p>
+                          <p className="text-xs text-gray-500">${item.price} cada uno</p>
                         )}
                       </div>
                     </div>
@@ -122,11 +133,11 @@ const ShoppingCartComponent = () => {
               <div className="flex justify-between items-center">
                 <span className="font-medium">Total: ${getTotalPrice().toFixed(2)}</span>
                 <Button variant="outline" onClick={clearCart} className="text-red-500">
-                  Clear Cart
+                  Vaciar Carrito
                 </Button>
               </div>
               <Button onClick={handleCheckout} className="w-full">
-                Proceed to Checkout
+                Proceder al Pago
               </Button>
             </div>
           </>

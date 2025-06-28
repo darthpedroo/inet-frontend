@@ -38,10 +38,10 @@ const AuthComponent = () => {
   if (isLoggedIn) {
     return (
       <div className="flex items-center space-x-2">
-        <span className="text-sm text-gray-600">Hello, {userEmail}</span>
+        <span className="text-sm text-gray-600">Hola, {userEmail}</span>
         <Button variant="outline" onClick={handleLogout}>
           <LogOut className="h-4 w-4 mr-2" />
-          Logout
+          Cerrar Sesión
         </Button>
       </div>
     );
@@ -52,41 +52,41 @@ const AuthComponent = () => {
       <DialogTrigger asChild>
         <Button variant="outline">
           <User className="h-4 w-4 mr-2" />
-          Login
+          Iniciar Sesión
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Login</DialogTitle>
+          <DialogTitle>Iniciar Sesión</DialogTitle>
           <DialogDescription>
-            Enter your credentials to access your account and cart.
+            Ingresa tus credenciales para acceder a tu cuenta y carrito.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Correo Electrónico</Label>
             <Input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              placeholder="Ingresa tu correo electrónico"
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Contraseña</Label>
             <Input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
+              placeholder="Ingresa tu contraseña"
               required
             />
           </div>
           <Button type="submit" className="w-full">
-            Login
+            Iniciar Sesión
           </Button>
         </form>
       </DialogContent>

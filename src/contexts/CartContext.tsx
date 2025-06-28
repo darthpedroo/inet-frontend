@@ -56,7 +56,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addToCart = (item: Omit<CartItem, 'quantity'>) => {
     if (!isLoggedIn) {
-      alert('Please log in to add items to your cart');
+      alert('Por favor inicia sesión para agregar elementos a tu carrito');
       return;
     }
 

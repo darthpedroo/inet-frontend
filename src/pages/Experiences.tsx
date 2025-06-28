@@ -6,8 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Camera, MapPin, Calendar, Users, Star, Clock, Heart } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import ShoppingCartComponent from "@/components/ShoppingCart";
+import AuthComponent from "@/components/AuthComponent";
 
 const Experiences = () => {
+  const { addToCart } = useCart();
   const [searchData, setSearchData] = useState({
     destination: "",
     date: "",
@@ -16,86 +20,103 @@ const Experiences = () => {
 
   const experiences = [
     {
-      id: 1,
-      name: "City Food Walking Tour",
-      location: "New York, NY",
-      duration: "3 hours",
+      id: "experience-1",
+      name: "Tour Gastronómico a Pie",
+      location: "Ciudad de México, MX",
+      duration: "3 horas",
       price: 89,
       rating: 4.9,
       reviews: 432,
-      category: "Food & Drink",
+      category: "Comida y Bebida",
       image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=250&fit=crop",
-      description: "Discover the best local food spots with a knowledgeable guide"
+      description: "Descubre los mejores lugares de comida local con un guía experto"
     },
     {
-      id: 2,
-      name: "Sunset Photography Workshop",
+      id: "experience-2",
+      name: "Taller de Fotografía al Atardecer",
       location: "San Francisco, CA",
-      duration: "2 hours",
+      duration: "2 horas",
       price: 125,
       rating: 4.8,
       reviews: 256,
-      category: "Photography",
+      category: "Fotografía",
       image: "https://images.unsplash.com/photo-1502780402662-acc01917176e?w=400&h=250&fit=crop",
-      description: "Learn professional photography techniques at golden hour"
+      description: "Aprende técnicas de fotografía profesional durante la hora dorada"
     },
     {
-      id: 3,
-      name: "Historic District Walking Tour",
+      id: "experience-3",
+      name: "Tour del Distrito Histórico",
       location: "Boston, MA",
-      duration: "2.5 hours",
+      duration: "2.5 horas",
       price: 45,
       rating: 4.7,
       reviews: 389,
-      category: "History",
+      category: "Historia",
       image: "https://images.unsplash.com/photo-1602522242891-c7b1b8b5c6cf?w=400&h=250&fit=crop",
-      description: "Explore centuries of American history in the historic district"
+      description: "Explora siglos de historia americana en el distrito histórico"
     },
     {
-      id: 4,
-      name: "Kayak Adventure Tour",
+      id: "experience-4",
+      name: "Aventura en Kayak",
       location: "Miami, FL",
-      duration: "4 hours",
+      duration: "4 horas",
       price: 179,
       rating: 4.9,
       reviews: 198,
-      category: "Adventure",
+      category: "Aventura",
       image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=250&fit=crop",
-      description: "Paddle through mangroves and spot local wildlife"
+      description: "Navega por manglares y observa la vida silvestre local"
     },
     {
-      id: 5,
-      name: "Wine Tasting Experience",
-      location: "Napa Valley, CA",
-      duration: "6 hours",
+      id: "experience-5",
+      name: "Experiencia de Cata de Vinos",
+      location: "Valle de Napa, CA",
+      duration: "6 horas",
       price: 299,
       rating: 4.8,
       reviews: 156,
-      category: "Food & Drink",
+      category: "Comida y Bebida",
       image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&h=250&fit=crop",
-      description: "Visit premium wineries and learn about wine making"
+      description: "Visita bodegas premium y aprende sobre la elaboración del vino"
     },
     {
-      id: 6,
-      name: "Mountain Hiking Adventure",
+      id: "experience-6",
+      name: "Aventura de Senderismo en Montaña",
       location: "Denver, CO",
-      duration: "5 hours",
+      duration: "5 horas",
       price: 149,
       rating: 4.9,
       reviews: 287,
-      category: "Adventure",
+      category: "Aventura",
       image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=400&h=250&fit=crop",
-      description: "Hike scenic mountain trails with experienced guides"
+      description: "Camina por senderos montañosos escénicos con guías experimentados"
     }
   ];
 
   const categories = [
-    { name: "All", count: experiences.length },
-    { name: "Adventure", count: experiences.filter(e => e.category === "Adventure").length },
-    { name: "Food & Drink", count: experiences.filter(e => e.category === "Food & Drink").length },
-    { name: "Photography", count: experiences.filter(e => e.category === "Photography").length },
-    { name: "History", count: experiences.filter(e => e.category === "History").length }
+    { name: "Todas", count: experiences.length },
+    { name: "Aventura", count: experiences.filter(e => e.category === "Aventura").length },
+    { name: "Comida y Bebida", count: experiences.filter(e => e.category === "Comida y Bebida").length },
+    { name: "Fotografía", count: experiences.filter(e => e.category === "Fotografía").length },
+    { name: "Historia", count: experiences.filter(e => e.category === "Historia").length }
   ];
+
+  const handleAddToCart = (experience: any) => {
+    addToCart({
+      id: experience.id,
+      name: experience.name,
+      price: experience.price,
+      type: 'EXPERIENCE',
+      image: experience.image,
+      description: experience.description,
+      details: {
+        location: experience.location,
+        duration: experience.duration,
+        rating: experience.rating,
+        category: experience.category
+      }
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -110,11 +131,15 @@ const Experiences = () => {
               <h1 className="text-2xl font-bold text-gray-900">TravelHub</h1>
             </div>
             <nav className="flex items-center space-x-6">
-              <a href="/" className="text-gray-600 hover:text-gray-900">Home</a>
-              <a href="/flights" className="text-gray-600 hover:text-gray-900">Flights</a>
-              <a href="/hotels" className="text-gray-600 hover:text-gray-900">Hotels</a>
-              <a href="/transport" className="text-gray-600 hover:text-gray-900">Transport</a>
-              <a href="/experiences" className="text-orange-600 font-medium">Experiences</a>
+              <a href="/" className="text-gray-600 hover:text-gray-900">Inicio</a>
+              <a href="/flights" className="text-gray-600 hover:text-gray-900">Vuelos</a>
+              <a href="/hotels" className="text-gray-600 hover:text-gray-900">Hoteles</a>
+              <a href="/transport" className="text-gray-600 hover:text-gray-900">Transporte</a>
+              <a href="/experiences" className="text-orange-600 font-medium">Experiencias</a>
+              <div className="flex items-center space-x-3">
+                <AuthComponent />
+                <ShoppingCartComponent />
+              </div>
             </nav>
           </div>
         </div>
@@ -124,16 +149,16 @@ const Experiences = () => {
       <section className="bg-orange-600 py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-white text-center mb-8">Discover Amazing Experiences</h2>
+            <h2 className="text-3xl font-bold text-white text-center mb-8">Descubre Experiencias Increíbles</h2>
             
             <div className="bg-white rounded-lg shadow-lg p-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div className="space-y-2">
-                  <Label>Destination</Label>
+                  <Label>Destino</Label>
                   <div className="relative">
                     <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input 
-                      placeholder="Where do you want to explore?" 
+                      placeholder="¿Dónde quieres explorar?" 
                       className="pl-10"
                       value={searchData.destination}
                       onChange={(e) => setSearchData({...searchData, destination: e.target.value})}
@@ -141,7 +166,7 @@ const Experiences = () => {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>Date</Label>
+                  <Label>Fecha</Label>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input 
@@ -153,11 +178,11 @@ const Experiences = () => {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>Guests</Label>
+                  <Label>Huéspedes</Label>
                   <div className="relative">
                     <Users className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input 
-                      placeholder="2 guests" 
+                      placeholder="2 huéspedes" 
                       className="pl-10"
                       value={searchData.guests}
                       onChange={(e) => setSearchData({...searchData, guests: e.target.value})}
@@ -166,7 +191,7 @@ const Experiences = () => {
                 </div>
               </div>
               <Button className="w-full bg-orange-600 hover:bg-orange-700 h-12">
-                Search Experiences
+                Buscar Experiencias
               </Button>
             </div>
           </div>
@@ -182,8 +207,8 @@ const Experiences = () => {
               {categories.map((category) => (
                 <Button
                   key={category.name}
-                  variant={category.name === "All" ? "default" : "outline"}
-                  className={category.name === "All" ? "bg-orange-600 hover:bg-orange-700" : ""}
+                  variant={category.name === "Todas" ? "default" : "outline"}
+                  className={category.name === "Todas" ? "bg-orange-600 hover:bg-orange-700" : ""}
                 >
                   {category.name} ({category.count})
                 </Button>
@@ -239,11 +264,20 @@ const Experiences = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <span className="text-2xl font-bold text-orange-600">${experience.price}</span>
-                        <span className="text-sm text-gray-600">/person</span>
+                        <span className="text-sm text-gray-600">/persona</span>
                       </div>
-                      <Button className="bg-orange-600 hover:bg-orange-700">
-                        Book Now
-                      </Button>
+                      <div className="space-x-2">
+                        <Button 
+                          variant="outline" 
+                          onClick={() => handleAddToCart(experience)}
+                          className="text-orange-600 border-orange-600 hover:bg-orange-50"
+                        >
+                          Agregar al Carrito
+                        </Button>
+                        <Button className="bg-orange-600 hover:bg-orange-700">
+                          Reservar Ahora
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
