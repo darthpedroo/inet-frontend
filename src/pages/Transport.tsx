@@ -7,11 +7,11 @@ import { useCart } from "@/contexts/CartContext";
 import ShoppingCartComponent from "@/components/ShoppingCart";
 import AuthComponent from "@/components/AuthComponent";
 import { useEffect, useState } from "react";
-import { getTransport } from "@/lib/api";
+import { getTransport, Transport as TransportType } from "@/lib/api";
 
 const Transport = () => {
   const { addToCart, isLoggedIn } = useCart();
-  const [transport, setTransport] = useState<any[]>([]);
+  const [transport, setTransport] = useState<TransportType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -83,6 +83,22 @@ const Transport = () => {
                         <div>
                           <h4 className="font-semibold text-gray-900">{item.name}</h4>
                           <p className="text-sm text-gray-600">{item.description}</p>
+                          <div className="mt-2">
+                            <Badge variant="secondary">{item.transport.vehicleType}</Badge>
+                            {item.transport.capacity && (
+                              <span className="ml-2 text-xs text-gray-500">Capacidad: {item.transport.capacity}</span>
+                            )}
+                            {item.transport.duration && (
+                              <span className="ml-2 text-xs text-gray-500">Duración: {item.transport.duration}</span>
+                            )}
+                          </div>
+                          {item.transport.includes && item.transport.includes.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-2">
+                              {item.transport.includes.map((inc, idx) => (
+                                <Badge key={idx} variant="outline" className="text-xs">{inc}</Badge>
+                              ))}
+                            </div>
+                          )}
                         </div>
                         <div className="text-right">
                           <span className="text-2xl font-bold text-purple-600">${item.price}</span>

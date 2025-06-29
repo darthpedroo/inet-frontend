@@ -6,11 +6,11 @@ import { useCart } from "@/contexts/CartContext";
 import ShoppingCartComponent from "@/components/ShoppingCart";
 import AuthComponent from "@/components/AuthComponent";
 import { useEffect, useState } from "react";
-import { getFlights } from "@/lib/api";
+import { getFlights, Flight } from "@/lib/api";
 
 const Flights = () => {
   const { addToCart, isLoggedIn } = useCart();
-  const [flights, setFlights] = useState<any[]>([]);
+  const [flights, setFlights] = useState<Flight[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -86,13 +86,13 @@ const Flights = () => {
                             </div>
                             <div>
                               <h4 className="font-semibold text-gray-900">{flight.name}</h4>
-                              <p className="text-sm text-gray-600">{flight.class || 'Económica'}</p>
+                              <p className="text-sm text-gray-600">{flight.flight.class || 'Económica'}</p>
                             </div>
                           </div>
                           <div className="flex items-center space-x-8">
                             <div className="text-center">
-                              <p className="text-2xl font-bold text-gray-900">{flight.departure || '-'}</p>
-                              <p className="text-sm text-gray-600">{flight.from || '-'}</p>
+                              <p className="text-2xl font-bold text-gray-900">{flight.flight.departure || '-'}</p>
+                              <p className="text-sm text-gray-600">{flight.flight.from || '-'}</p>
                             </div>
                             <div className="flex-1 text-center">
                               <div className="flex items-center justify-center space-x-2">
@@ -104,13 +104,13 @@ const Flights = () => {
                               </div>
                               <div className="flex items-center justify-center space-x-2 mt-2">
                                 <Clock className="h-4 w-4 text-gray-400" />
-                                <span className="text-sm text-gray-600">{flight.duration || '-'}</span>
+                                <span className="text-sm text-gray-600">{flight.flight.duration || '-'}</span>
                               </div>
-                              <Badge variant="secondary" className="mt-1">{flight.stops || 'Directo'}</Badge>
+                              <Badge variant="secondary" className="mt-1">{flight.flight.stops || 'Directo'}</Badge>
                             </div>
                             <div className="text-center">
-                              <p className="text-2xl font-bold text-gray-900">{flight.arrival || '-'}</p>
-                              <p className="text-sm text-gray-600">{flight.to || '-'}</p>
+                              <p className="text-2xl font-bold text-gray-900">{flight.flight.arrival || '-'}</p>
+                              <p className="text-sm text-gray-600">{flight.flight.to || '-'}</p>
                             </div>
                           </div>
                           <p className="text-sm text-gray-600 mt-4">{flight.description}</p>

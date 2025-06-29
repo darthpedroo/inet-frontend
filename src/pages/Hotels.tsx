@@ -6,11 +6,11 @@ import { useCart } from "@/contexts/CartContext";
 import ShoppingCartComponent from "@/components/ShoppingCart";
 import AuthComponent from "@/components/AuthComponent";
 import { useEffect, useState } from "react";
-import { getHotels } from "@/lib/api";
+import { getHotels, Hotel as HotelType } from "@/lib/api";
 
 const Hotels = () => {
   const { addToCart, isLoggedIn } = useCart();
-  const [hotels, setHotels] = useState<any[]>([]);
+  const [hotels, setHotels] = useState<HotelType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -83,14 +83,14 @@ const Hotels = () => {
                           <CardTitle className="text-xl font-bold text-gray-900">{hotel.name}</CardTitle>
                           <CardDescription className="flex items-center">
                             <MapPin className="h-4 w-4 mr-1" />
-                            {hotel.location || '-'}
+                            {hotel.hotel.location || '-'}
                           </CardDescription>
                         </div>
                         <div className="text-right">
                           <div className="flex items-center space-x-1">
                             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            <span className="font-medium">{hotel.rating || '-'}</span>
-                            <span className="text-sm text-gray-500">({hotel.reviews || 0})</span>
+                            <span className="font-medium">{hotel.hotel.rating || '-'}</span>
+                            <span className="text-sm text-gray-500">({hotel.hotel.reviews || 0})</span>
                           </div>
                         </div>
                       </div>
@@ -98,7 +98,7 @@ const Hotels = () => {
                     <CardContent>
                       <p className="text-gray-600 mb-4">{hotel.description}</p>
                       <div className="flex flex-wrap gap-2 mb-4">
-                        {(hotel.amenities || []).map((amenity: string, index: number) => (
+                        {(hotel.hotel.amenities || []).map((amenity: string, index: number) => (
                           <Badge key={index} variant="secondary" className="text-xs">
                             {amenity}
                           </Badge>

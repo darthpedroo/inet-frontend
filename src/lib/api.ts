@@ -23,24 +23,99 @@ export async function getProducts() {
   return res.json();
 }
 
-export async function getFlights() {
-  const products = await getProducts();
-  return products.filter((p: any) => p.type === 'FLIGHT');
+// Tipos enriquecidos para cada producto
+export interface Flight {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  type: 'FLIGHT';
+  flight: {
+    from: string;
+    to: string;
+    departure: string;
+    arrival: string;
+    duration: string;
+    class: string;
+    stops: string;
+    airline?: string;
+    flightNumber?: string;
+  };
 }
 
-export async function getHotels() {
-  const products = await getProducts();
-  return products.filter((p: any) => p.type === 'HOTEL');
+export interface Hotel {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  type: 'HOTEL';
+  hotel: {
+    location: string;
+    rating?: number;
+    reviews: number;
+    amenities: string[];
+    checkIn?: string;
+    checkOut?: string;
+    rooms?: number;
+    stars?: number;
+  };
 }
 
-export async function getTransport() {
-  const products = await getProducts();
-  return products.filter((p: any) => p.type === 'TRANSPORT');
+export interface Transport {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  type: 'TRANSPORT';
+  transport: {
+    vehicleType: string;
+    capacity?: number;
+    pickupLocation?: string;
+    dropoffLocation?: string;
+    duration?: string;
+    includes: string[];
+  };
 }
 
-export async function getExperiences() {
-  const products = await getProducts();
-  return products.filter((p: any) => p.type === 'EXCURSION');
+export interface Experience {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  type: 'EXCURSION';
+  excursion: {
+    location: string;
+    category: string;
+    duration?: string;
+    maxGroupSize?: number;
+    difficulty?: string;
+    includes: string[];
+    requirements: string[];
+  };
+}
+
+export async function getFlights(): Promise<Flight[]> {
+  const res = await fetch('http://localhost:3000/api/flights');
+  if (!res.ok) throw new Error('Failed to fetch flights');
+  return res.json();
+}
+
+export async function getHotels(): Promise<Hotel[]> {
+  const res = await fetch('http://localhost:3000/api/hotels');
+  if (!res.ok) throw new Error('Failed to fetch hotels');
+  return res.json();
+}
+
+export async function getTransport(): Promise<Transport[]> {
+  const res = await fetch('http://localhost:3000/api/transport');
+  if (!res.ok) throw new Error('Failed to fetch transport');
+  return res.json();
+}
+
+export async function getExperiences(): Promise<Experience[]> {
+  const res = await fetch('http://localhost:3000/api/experiences');
+  if (!res.ok) throw new Error('Failed to fetch experiences');
+  return res.json();
 }
 
 export async function loginUser(email: string, password: string) {

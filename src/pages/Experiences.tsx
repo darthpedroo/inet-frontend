@@ -6,11 +6,11 @@ import { useCart } from "@/contexts/CartContext";
 import ShoppingCartComponent from "@/components/ShoppingCart";
 import AuthComponent from "@/components/AuthComponent";
 import { useEffect, useState } from "react";
-import { getExperiences } from "@/lib/api";
+import { getExperiences, Experience as ExperienceType } from "@/lib/api";
 
 const Experiences = () => {
   const { addToCart, isLoggedIn } = useCart();
-  const [experiences, setExperiences] = useState<any[]>([]);
+  const [experiences, setExperiences] = useState<ExperienceType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -80,15 +80,28 @@ const Experiences = () => {
                   <Card key={experience.id} className="hover:shadow-lg transition-shadow overflow-hidden">
                     <CardHeader>
                       <CardTitle>{experience.name}</CardTitle>
-                      <CardDescription>{experience.location || '-'}</CardDescription>
+                      <CardDescription>{experience.excursion.location || '-'}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <p className="text-gray-600 mb-4">{experience.description}</p>
                       <div className="flex flex-wrap gap-2 mb-4">
                         <Badge variant="secondary" className="text-xs">
-                          {experience.category || 'Excursión'}
+                          {experience.excursion.category || 'Excursión'}
                         </Badge>
+                        {experience.excursion.difficulty && (
+                          <Badge variant="outline" className="text-xs">{experience.excursion.difficulty}</Badge>
+                        )}
+                        {experience.excursion.duration && (
+                          <Badge variant="outline" className="text-xs">{experience.excursion.duration}</Badge>
+                        )}
                       </div>
+                      {experience.excursion.includes && experience.excursion.includes.length > 0 && (
+                        <div className="mb-2 flex flex-wrap gap-2">
+                          {experience.excursion.includes.map((inc, idx) => (
+                            <Badge key={idx} variant="outline" className="text-xs">{inc}</Badge>
+                          ))}
+                        </div>
+                      )}
                       <div className="flex items-center justify-between">
                         <div>
                           <span className="text-2xl font-bold text-orange-600">${experience.price}</span>
