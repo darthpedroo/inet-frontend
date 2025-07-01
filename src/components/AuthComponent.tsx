@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { loginUser, registerUser } from "@/lib/api";
+import { jsx } from 'react/jsx-runtime';
 
 const AuthComponent = () => {
   const { isLoggedIn, login, logout, userEmail } = useCart();
@@ -38,6 +39,36 @@ const AuthComponent = () => {
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [showRegisterConfirm, setShowRegisterConfirm] = useState(false);
 
+  const validateRegistrationFields = () => {
+    const errors: {[key:string]: string} = {};
+    
+    // Email validation
+    if (!registerEmail) {
+      errors.email = 'El correo electrónico es requerido';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(registerEmail)) {
+      errors.email = 'Por favor ingresa un correo electrónico válido';
+    }
+    
+    // Password validation
+    if (!registerPassword) {
+      errors.password = 'La contraseña es requerida';
+    } else if (registerPassword.length < 6) {
+      errors.password = 'La contraseña debe tener al menos 6 caracteres';
+    }
+    
+    // Name validation
+    if (!registerName.trim()) {
+      errors.name = 'El nombre es requerido';
+    }
+    
+    // Password confirmation validation
+    if (registerPassword !== registerConfirm) {
+      errors.confirm = 'Las contraseñas no coinciden';
+    }
+    
+    return errors;
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError(null);
@@ -59,7 +90,6 @@ const AuthComponent = () => {
         });
         setLoginFieldErrors(fieldErrs);
       } else if (err && err.errors) {
-        // If error is a plain object
         const fieldErrs: {[key:string]: string} = {};
         err.errors.forEach((e: any) => {
           fieldErrs[e.param] = e.msg;
@@ -75,6 +105,14 @@ const AuthComponent = () => {
     e.preventDefault();
     setRegisterError(null);
     setRegisterFieldErrors({});
+    
+    // Validate fields before submitting
+    const validationErrors = validateRegistrationFields();
+    if (Object.keys(validationErrors).length > 0) {
+      setRegisterFieldErrors(validationErrors);
+      return;
+    }
+    
     setRegisterLoading(true);
     try {
       const data = await registerUser(registerEmail, registerPassword, registerName);

@@ -23,7 +23,7 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
       }
       
       console.log('🔄 Fetching user data...');
-      const response = await fetch('http://localhost:3000/api/auth/profile', {
+      const response = await fetch('${API_URL}/api/auth/profile', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

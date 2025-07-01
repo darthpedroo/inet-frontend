@@ -106,7 +106,7 @@ const Products: React.FC = () => {
         throw new Error('Authentication token not found. Please log in again.');
       }
 
-      const response = await fetch(`http://localhost:3000/api/products?product_type=${productType.toLowerCase()}`, {
+      const response = await fetch(`${API_URL}/api/products?product_type=${productType.toLowerCase()}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -129,7 +129,7 @@ const Products: React.FC = () => {
       }
 
       const method = product.id ? 'PUT' : 'POST';
-      const url = product.id ? `http://localhost:3000/api/products/${product.id}` : 'http://localhost:3000/api/products';
+      const url = product.id ? `${API_URL}/api/products/${product.id}` : '${API_URL}/api/products';
       
       const response = await fetch(url, {
         method,
@@ -168,7 +168,7 @@ const Products: React.FC = () => {
         throw new Error('Authentication token not found. Please log in again.');
       }
 
-      const response = await fetch(`http://localhost:3000/api/products/${id}`, {
+      const response = await fetch(`${API_URL}/api/products/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

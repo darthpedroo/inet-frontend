@@ -4,7 +4,7 @@ function getAuthHeaders() {
 }
 
 export async function getPackages() {
-  const res = await fetch('http://localhost:3000/api/packages', {
+  const res = await fetch('${API_URL}/api/packages', {
     headers: {
       ...getAuthHeaders(),
     },
@@ -14,7 +14,7 @@ export async function getPackages() {
 }
 
 export async function getProducts() {
-  const res = await fetch('http://localhost:3000/api/products', {
+  const res = await fetch('${API_URL}/api/products', {
     headers: {
       ...getAuthHeaders(),
     },
@@ -95,31 +95,31 @@ export interface Experience {
 }
 
 export async function getFlights(): Promise<Flight[]> {
-  const res = await fetch('http://localhost:3000/api/flights');
+  const res = await fetch('${API_URL}/api/flights');
   if (!res.ok) throw new Error('Failed to fetch flights');
   return res.json();
 }
 
 export async function getHotels(): Promise<Hotel[]> {
-  const res = await fetch('http://localhost:3000/api/hotels');
+  const res = await fetch('${API_URL}/api/hotels');
   if (!res.ok) throw new Error('Failed to fetch hotels');
   return res.json();
 }
 
 export async function getTransport(): Promise<Transport[]> {
-  const res = await fetch('http://localhost:3000/api/transport');
+  const res = await fetch('${API_URL}/api/transport');
   if (!res.ok) throw new Error('Failed to fetch transport');
   return res.json();
 }
 
 export async function getExperiences(): Promise<Experience[]> {
-  const res = await fetch('http://localhost:3000/api/experiences');
+  const res = await fetch('${API_URL}/api/experiences');
   if (!res.ok) throw new Error('Failed to fetch experiences');
   return res.json();
 }
 
 export async function loginUser(email: string, password: string) {
-  const res = await fetch('http://localhost:3000/api/auth/login', {
+  const res = await fetch('${API_URL}/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password })
@@ -130,7 +130,7 @@ export async function loginUser(email: string, password: string) {
 }
 
 export async function registerUser(email: string, password: string, name: string) {
-  const res = await fetch('http://localhost:3000/api/auth/register', {
+  const res = await fetch('${API_URL}/api/auth/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password, name })
@@ -141,7 +141,7 @@ export async function registerUser(email: string, password: string, name: string
 }
 
 export async function getCart() {
-  const res = await fetch('http://localhost:3000/api/cart', {
+  const res = await fetch('${API_URL}/api/cart', {
     headers: {
       ...getAuthHeaders(),
     },
@@ -151,7 +151,7 @@ export async function getCart() {
 }
 
 export async function addCartItem({ productId, packageId, quantity }: { productId?: string; packageId?: string; quantity: number; }) {
-  const res = await fetch('http://localhost:3000/api/cart/items', {
+  const res = await fetch('${API_URL}/api/cart/items', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -164,7 +164,7 @@ export async function addCartItem({ productId, packageId, quantity }: { productI
 }
 
 export async function updateCartItem(id: string, quantity: number) {
-  const res = await fetch(`http://localhost:3000/api/cart/items/${id}`, {
+  const res = await fetch(`${API_URL}/api/cart/items/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ export async function updateCartItem(id: string, quantity: number) {
 }
 
 export async function removeCartItem(id: string) {
-  const res = await fetch(`http://localhost:3000/api/cart/items/${id}`, {
+  const res = await fetch(`${API_URL}/api/cart/items/${id}`, {
     method: 'DELETE',
     headers: {
       ...getAuthHeaders(),

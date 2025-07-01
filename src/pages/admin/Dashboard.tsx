@@ -33,7 +33,7 @@ const Dashboard: React.FC = () => {
         throw new Error('Authentication token not found. Please log in again.');
       }
 
-      const response = await fetch('http://localhost:3000/api/dashboard/stats', {
+      const response = await fetch('${API_URL}/api/dashboard/stats', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
