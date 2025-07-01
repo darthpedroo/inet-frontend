@@ -1,4 +1,5 @@
 import React from 'react';
+const API_URL = import.meta.env.VITE_API_URL;
 import { Navigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
@@ -23,7 +24,7 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
       }
       
       console.log('🔄 Fetching user data...');
-      const response = await fetch('${API_URL}/api/auth/profile', {
+      const response = await fetch(`${API_URL}/api/auth/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
