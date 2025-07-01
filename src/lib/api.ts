@@ -1,3 +1,4 @@
+const API_URL = import.meta.env.VITE_API_URL;
 function getAuthHeaders() {
   const token = localStorage.getItem('travelToken');
   return token ? { Authorization: `Bearer ${token}` } : {};
@@ -95,31 +96,31 @@ export interface Experience {
 }
 
 export async function getFlights(): Promise<Flight[]> {
-  const res = await fetch('${API_URL}/api/flights');
+  const res = await fetch(`${API_URL}/api/flights`);
   if (!res.ok) throw new Error('Failed to fetch flights');
   return res.json();
 }
 
 export async function getHotels(): Promise<Hotel[]> {
-  const res = await fetch('${API_URL}/api/hotels');
+  const res = await fetch(`${API_URL}/api/hotels`);
   if (!res.ok) throw new Error('Failed to fetch hotels');
   return res.json();
 }
 
 export async function getTransport(): Promise<Transport[]> {
-  const res = await fetch('${API_URL}/api/transport');
+  const res = await fetch(`${API_URL}/api/transport`);
   if (!res.ok) throw new Error('Failed to fetch transport');
   return res.json();
 }
 
 export async function getExperiences(): Promise<Experience[]> {
-  const res = await fetch('${API_URL}/api/experiences');
+  const res = await fetch(`${API_URL}/api/experiences`);
   if (!res.ok) throw new Error('Failed to fetch experiences');
   return res.json();
 }
 
 export async function loginUser(email: string, password: string) {
-  const res = await fetch('${API_URL}/api/auth/login', {
+  const res = await fetch(`${API_URL}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password })
@@ -130,7 +131,7 @@ export async function loginUser(email: string, password: string) {
 }
 
 export async function registerUser(email: string, password: string, name: string) {
-  const res = await fetch('${API_URL}/api/auth/register', {
+  const res = await fetch(`${API_URL}/api/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password, name })
@@ -141,7 +142,7 @@ export async function registerUser(email: string, password: string, name: string
 }
 
 export async function getCart() {
-  const res = await fetch('${API_URL}/api/cart', {
+  const res = await fetch(`${API_URL}/api/cart`, {
     headers: {
       ...getAuthHeaders(),
     },
@@ -151,7 +152,7 @@ export async function getCart() {
 }
 
 export async function addCartItem({ productId, packageId, quantity }: { productId?: string; packageId?: string; quantity: number; }) {
-  const res = await fetch('${API_URL}/api/cart/items', {
+  const res = await fetch(`${API_URL}/api/cart/items`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 import React from 'react';
 import { Card, Grid, Typography, Box, Container } from '@mui/material';
 import { Flight, Hotel, DirectionsBus, Explore } from '@mui/icons-material';
@@ -33,7 +35,7 @@ const Dashboard: React.FC = () => {
         throw new Error('Authentication token not found. Please log in again.');
       }
 
-      const response = await fetch('${API_URL}/api/dashboard/stats', {
+      const response = await fetch(`${API_URL}/api/dashboard/stats`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
