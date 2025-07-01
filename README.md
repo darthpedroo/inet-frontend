@@ -558,4 +558,3 @@ console.log('Context Update:', newValue);
 
 ---
 
-*Última actualización: Enero 2025* 
